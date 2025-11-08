@@ -10,6 +10,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mvc:
+    cors:
+      mappings:
+        - path-pattern: "/**"
+          allowed-origins: "http://localhost:5173"
+          allowed-methods: "*"
+          allowed-headers: "*"
+          allow-credentials: true
 
 server:
   port: 8080
