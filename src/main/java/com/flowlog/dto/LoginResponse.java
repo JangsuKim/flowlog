@@ -1,5 +1,7 @@
 package com.flowlog.dto;
 
+import com.flowlog.entity.Team;
+import com.flowlog.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,5 +13,6 @@ public class LoginResponse {
     private Long userId;
     private String email;
     private String name;
-    private int role;
+    private RoleType role;
+    private Team team;
 }

@@ -1,10 +1,12 @@
 package com.flowlog.service;
 
+import com.flowlog.entity.Team;
 import com.flowlog.entity.User;
 import com.flowlog.dto.LoginRequest;
 import com.flowlog.dto.LoginResponse;
 import com.flowlog.dto.RegisterRequest;
 import com.flowlog.enums.RoleType;
+import com.flowlog.repository.TeamRepository;
 import com.flowlog.repository.UserRepository;
 import com.flowlog.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -26,6 +29,11 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setName(request.getName());
         user.setRole(RoleType.MEMBER);
+        if (request.getTeamId() != null) {
+            Team team = teamRepository.findById(request.getTeamId())
+                    .orElseThrow(() -> new IllegalArgumentException("チームが見つかりません。"));
+            user.setTeam(team);
+        }
         return userRepository.save(user);
     }
 
@@ -40,6 +48,6 @@ public class AuthService {
 
         int roleCode = user.getRole().getCode();
         String token = jwtUtil.generateToken(user.getId(), user.getEmail(), roleCode);
-        return new LoginResponse(token, "Bearer", user.getId(), user.getEmail(), user.getName(), roleCode);
+        return new LoginResponse(token, "Bearer", user.getId(), user.getEmail(), user.getName(), user.getRole(), user.getTeam());
     }
 }
