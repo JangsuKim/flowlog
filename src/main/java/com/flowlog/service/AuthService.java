@@ -48,6 +48,6 @@ public class AuthService {
 
         int roleCode = user.getRole().getCode();
         String token = jwtUtil.generateToken(user.getId(), user.getEmail(), roleCode);
-        return new LoginResponse(token, "Bearer", user.getId(), user.getEmail(), user.getName(), user.getRole(), user.getTeam());
+        return LoginResponse.of(user, token, "Bearer");
     }
 }
