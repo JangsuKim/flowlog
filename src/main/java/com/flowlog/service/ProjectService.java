@@ -40,6 +40,13 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+    public ProjectDto getProjectById(Long id) {
+        // soft delete 고려(권장: 아래 레포지토리 메서드 사용)
+        Project p = projectRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new IllegalArgumentException("Project not found: " + id));
+        return ProjectDto.fromEntity(p);
+    }
+
     // ✅ 프로젝트 생성
     public ProjectDto createProject(ProjectDto dto, User owner) {
         Team team = teamRepository.findById(dto.teamId())

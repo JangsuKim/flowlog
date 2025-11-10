@@ -45,6 +45,10 @@ public class ProjectController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectDto> getProjectById(@PathVariable Long id) {
+        return ResponseEntity.ok(projectService.getProjectById(id));
+    }
 
     // ✅ 프로젝트 생성
     @PostMapping
